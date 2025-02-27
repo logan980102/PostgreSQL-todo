@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, jsonify
 import sqlite3
 
 app = Flask(__name__)
-
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+    
 # 📌 DB 초기화
 def init_db():
     with sqlite3.connect("todos.db") as conn:
