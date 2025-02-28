@@ -19,10 +19,23 @@ body {
 }
 
 /* 제목 스타일 */
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.title-container img {
+  width: 40px; /* 제목 크기에 맞춰 조정 */
+  height: 40px;
+}
+
 h1 {
   color: #414141;
   font-size: 34px;
-  margin-bottom: 20px;
+  margin: 0;
   font-weight: bold;
 }
 
@@ -70,7 +83,7 @@ ul {
 /* 개별 투두 항목 */
 li {
   background: #fff;
-  padding: 6px 10px; /* 높이 조절 */
+  padding: 6px 10px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
@@ -78,24 +91,23 @@ li {
   margin-bottom: 5px;
   border: 1px solid #ddd;
   transition: background 0.3s ease-in-out;
-  min-height: 1.3em; /* 입력 칸보다 1.3배 크도록 설정 */
+  min-height: 1.3em;
 }
 
 /* 투두 텍스트 */
 li span {
   flex: 1;
   text-align: left;
-  font-size: 16px; /* 크기는 유지 */
-  font-weight: normal; /* 볼드 제거 */
+  font-size: 16px;
+  font-weight: normal;
   color: black;
 }
 
 /* 버튼 컨테이너 */
 .button-group {
   display: flex;
-  gap: 10px;
-  margin-left: auto;
-  margin-right: 5px;
+  gap: 5px; /* 버튼 사이 간격 조정 */
+  align-items: center;
 }
 
 /* 완료 버튼 */

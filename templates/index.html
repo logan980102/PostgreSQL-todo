@@ -11,7 +11,15 @@
   </head>
   <body>
     <div class="container">
-      <h1>📝 유진이의 투두리스트</h1>
+      <!-- 제목 + 이미지 추가 -->
+      <div class="title-container">
+        <img
+          src="{{ url_for('static', filename='images/duck.png') }}"
+          alt="Duck Icon"
+        />
+        <h1>유진이의 투두리스트</h1>
+      </div>
+
       <div class="input-area">
         <input
           type="text"
