@@ -4,22 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>투두리스트</title>
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
   </head>
   <body>
     <div class="container">
-      <h1>📝 오늘의 할 일</h1>
-      <div class="input-container">
+      <h1>📝 유진이의 투두리스트</h1>
+      <div class="input-area">
         <input
           type="text"
           id="task-input"
-          placeholder="할 일을 입력하세요..."
+          placeholder="오늘은 뭘 할까 적어 보세욤"
         />
         <button id="add-btn">추가</button>
       </div>
       <ul id="task-list"></ul>
-      <button id="reset-btn">전체 삭제</button>
+      <button id="reset-btn" class="reset">하루의 인생을 초기화하기</button>
     </div>
-    <script src="/static/script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
   </body>
 </html>
