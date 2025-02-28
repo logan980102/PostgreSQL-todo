@@ -3,13 +3,13 @@ import psycopg2
 from psycopg2.extras import DictCursor
 from datetime import datetime
 import requests
-
+import locale
 
 
 
 app = Flask(__name__)
 
-
+locale.setlocale(locale.LC_TIME, "ko_KR.UTF-8")
 API_KEY = "0c3ab40f7d457d50856c64cebbaa68e7"
 CITY = "Sancheok-dong, KR"
 # 📌 PostgreSQL 연결 정보 (직접 URL 사용)
@@ -41,26 +41,27 @@ def init_db():
 
 # 날씨 정보를 가져오는 함수
 def get_weather():
-    api_key = "YOUR_OPENWEATHERMAP_API_KEY"  # OpenWeatherMap API 키를 입력하세요
-    city = "Sancheok-dong, KR"
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=kr"
-
+    city = "Hwaseong-si"
+    country = "KR"
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city},{country}&appid={API_KEY}&units=metric&lang=kr"
+    
     try:
         response = requests.get(url)
         data = response.json()
-        if response.status_code == 200:
-            weather = {
-                "description": data["weather"][0]["description"],
-                "icon": data["weather"][0]["icon"],
-                "temperature": data["main"]["temp"]
-            }
-            return weather
-        else:
-            print(f"Error fetching weather data: {data['message']}")
+        
+        if response.status_code != 200:
             return None
+
+        return {
+            "description": data["weather"][0]["description"],  # 날씨 설명 (한글)
+            "icon": data["weather"][0]["icon"],  # 날씨 아이콘
+            "temperature": round(data["main"]["temp"]),  # 현재 온도 (반올림)
+        }
     except Exception as e:
-        print(f"Exception occurred: {e}")
+        print(f"Error fetching weather data: {e}")
         return None
+
+
 
 
 # 투두리스트 조회
