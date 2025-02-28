@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const addBtn = document.getElementById("add-btn");
   const taskList = document.getElementById("task-list");
   const resetBtn = document.getElementById("reset-btn");
+  const historyList = document.getElementById("history-list"); // 기록 표시 영역
 
   function fetchTasks() {
     fetch("/todos")
@@ -10,6 +11,19 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         taskList.innerHTML = "";
         data.forEach((todo) => addTask(todo.text, todo.done, todo.id));
+      });
+  }
+
+  function fetchHistory() {
+    fetch("/history")
+      .then((res) => res.json())
+      .then((data) => {
+        historyList.innerHTML = "";
+        data.forEach((record) => {
+          const li = document.createElement("li");
+          li.textContent = `${record.date} - 완료: ${record.completed}/${record.total}`;
+          historyList.appendChild(li);
+        });
       });
   }
 
@@ -28,9 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
     taskList.appendChild(li);
   }
 
-  function addTodo() {
+  addBtn.addEventListener("click", function () {
     const text = taskInput.value.trim();
-    if (text === "") return; // 빈 값 방지
+    if (text === "") return;
 
     fetch("/add", {
       method: "POST",
@@ -40,19 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
       taskInput.value = "";
       fetchTasks();
     });
-  }
-
-  // ✅ "추가" 버튼 클릭 이벤트
-  addBtn.addEventListener("click", addTodo);
-
-  // ✅ **Enter 키 입력 시 추가**
-  taskInput.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      addTodo();
-    }
   });
 
-  // ✅ "완료/삭제" 버튼 이벤트 (이벤트 위임 방식)
   taskList.addEventListener("click", function (event) {
     const target = event.target;
     const id = target.dataset.id;
@@ -64,10 +67,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // 🧹 "전체 삭제" 버튼
   resetBtn.addEventListener("click", function () {
-    fetch("/reset", { method: "POST" }).then(() => fetchTasks());
+    fetch("/reset", { method: "POST" }).then(() => {
+      fetchTasks();
+      fetchHistory();
+    });
   });
 
   fetchTasks();
+  fetchHistory();
 });
