@@ -80,12 +80,6 @@ def index():
 
 
 # 투두리스트 조회
-@app.route("/")
-def index():
-    today = datetime.now().strftime("%m월 %d일 %A")
-    weather = get_weather()
-    return render_template("index.html", today=today, weather=weather)
-
 # 이하 기존 코드 생략
 
 @app.route("/todos")
