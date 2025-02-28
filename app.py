@@ -54,7 +54,7 @@ def reset_todos():
 
 # ✅ 스케줄러 실행 (매일 6시)
 scheduler = BackgroundScheduler()
-scheduler.add_job(reset_todos, "cron", hour=22, minute=8, timezone="Asia/Seoul") 
+scheduler.add_job(reset_todos, "cron", hour=22, minute=10, timezone="Asia/Seoul") 
 scheduler.start()
 
 # ✅ 투두리스트 조회
