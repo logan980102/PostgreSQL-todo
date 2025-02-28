@@ -11,9 +11,9 @@ body {
 .container {
   width: 90%;
   max-width: 400px;
-  margin: 30px auto; /* 간격 조정 */
+  margin: 50px auto;
   background: white;
-  padding: 15px; /* 패딩 줄이기 */
+  padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -21,31 +21,31 @@ body {
 /* 제목 스타일 - 더 크고 강조된 스타일 */
 h1 {
   color: #414141;
-  font-size: 30px; /* 제목 크기 감소 */
-  margin-bottom: 15px;
+  font-size: 34px; /* 제목 크기 증가 */
+  margin-bottom: 20px;
   font-weight: bold;
 }
 
 /* 입력 영역 */
 .input-area {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 15px;
 }
 
 input {
   flex: 1;
-  padding: 10px; /* 패딩 줄이기 */
+  padding: 10px; /* 위아래 패딩 감소 */
   border: 2px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 8px;
+  font-size: 16px;
 }
 
 /* 버튼 기본 스타일 */
 button {
   padding: 10px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   color: white;
   font-size: 14px;
   cursor: pointer;
@@ -54,7 +54,7 @@ button {
 /* 추가 버튼 */
 #add-btn {
   background-color: #007bff;
-  width: 65px;
+  width: 70px;
 }
 
 #add-btn:hover {
@@ -70,42 +70,44 @@ ul {
 /* 개별 투두 항목 */
 li {
   background: #fff;
-  padding: 8px; /* 패딩 줄이기 */
-  border-radius: 6px;
+  padding: 6px 12px; /* 위아래 패딩 줄이기 */
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px; /* 간격 줄이기 */
+  margin-bottom: 5px;
   border: 1px solid #ddd;
   transition: background 0.3s ease-in-out;
+  min-height: 30px; /* 최소 높이 조정 */
 }
 
 /* 투두 텍스트 */
 li span {
   flex: 1;
   text-align: left;
-  font-size: 14px; /* 글자 크기 줄이기 */
+  font-size: 18px; /* 글씨 크기 증가 */
+  font-weight: bold;
   color: black;
 }
 
 /* 버튼 컨테이너 (오른쪽 정렬 & 간격 추가) */
 .button-group {
   display: flex;
-  gap: 10px; /* 버튼 간격 줄이기 */
-  margin-left: auto;
-  margin-right: 5px;
+  gap: 15px; /* 버튼 간격 줄이기 */
+  margin-left: auto; /* 오른쪽 정렬 */
+  margin-right: 5px; /* 오른쪽 여백 추가 */
 }
 
 /* 완료 버튼 */
 .toggle-btn {
   background-color: #28a745;
   width: 40px;
-  height: 35px; /* 버튼 크기 줄이기 */
+  height: 35px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .toggle-btn:hover {
@@ -121,7 +123,7 @@ li span {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .delete-btn:hover {
@@ -137,8 +139,8 @@ li.done {
 
 /* 전체 삭제 버튼 */
 .reset {
-  margin-top: 10px; /* 간격 조정 */
-  background: #ff3c3c;
+  margin-top: 10px;
+  background: #ff3c3c; /* 더 부드러운 노란색으로 변경 */
   color: white;
   font-weight: bold;
 }
