@@ -1,17 +1,22 @@
-import os
-import psycopg2
 from flask import Flask, render_template, request, jsonify
+import psycopg2
+import os
+from dotenv import load_dotenv
 
-app = Flask(__name__)
+# .env 파일에서 환경 변수 로드
+load_dotenv()
 
-# 📌 환경변수에서 DATABASE_URL 가져오기
+# PostgreSQL 연결 설정
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# 📌 DB 연결 함수
 def get_db_connection():
-    return psycopg2.connect(DATABASE_URL, sslmode="require")
+    return psycopg2.connect(DATABASE_URL)
 
-# 📌 DB 초기화 함수
+# Flask 앱 설정
+app = Flask(__name__, static_folder="static", static_url_path="/static")
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Static 파일 캐싱 방지
+
+# 📌 DB 초기화
 def init_db():
     with get_db_connection() as conn:
         with conn.cursor() as cur:
@@ -26,10 +31,12 @@ def init_db():
 
 init_db()
 
+# 🏠 메인 페이지
 @app.route("/")
 def index():
     return render_template("index.html")
 
+# 📌 모든 투두 가져오기
 @app.route("/todos")
 def get_todos():
     with get_db_connection() as conn:
@@ -38,6 +45,7 @@ def get_todos():
             todos = [{"id": row[0], "text": row[1], "done": row[2]} for row in cur.fetchall()]
     return jsonify(todos)
 
+# ➕ 할 일 추가
 @app.route("/add", methods=["POST"])
 def add_todo():
     data = request.json
@@ -49,6 +57,7 @@ def add_todo():
                 conn.commit()
     return "", 204
 
+# ✅ 완료 상태 토글
 @app.route("/toggle/<int:todo_id>", methods=["POST"])
 def toggle_todo(todo_id):
     with get_db_connection() as conn:
@@ -57,6 +66,7 @@ def toggle_todo(todo_id):
             conn.commit()
     return "", 204
 
+# ❌ 삭제
 @app.route("/delete/<int:todo_id>", methods=["POST"])
 def delete_todo(todo_id):
     with get_db_connection() as conn:
@@ -65,6 +75,7 @@ def delete_todo(todo_id):
             conn.commit()
     return "", 204
 
+# 🗑 전체 삭제
 @app.route("/reset", methods=["POST"])
 def reset_todos():
     with get_db_connection() as conn:
