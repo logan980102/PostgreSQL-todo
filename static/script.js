@@ -28,8 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     taskList.appendChild(li);
   }
 
-  // ✅ "추가" 버튼 클릭 이벤트
-  addBtn.addEventListener("click", function () {
+  function addTodo() {
     const text = taskInput.value.trim();
     if (text === "") return; // 빈 값 방지
 
@@ -41,6 +40,16 @@ document.addEventListener("DOMContentLoaded", function () {
       taskInput.value = "";
       fetchTasks();
     });
+  }
+
+  // ✅ "추가" 버튼 클릭 이벤트
+  addBtn.addEventListener("click", addTodo);
+
+  // ✅ **Enter 키 입력 시 추가**
+  taskInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      addTodo();
+    }
   });
 
   // ✅ "완료/삭제" 버튼 이벤트 (이벤트 위임 방식)
