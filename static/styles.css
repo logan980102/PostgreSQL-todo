@@ -101,14 +101,14 @@ li span {
   color: black;
 }
 
-/* 버튼 컨테이너 - 완료 & 삭제 버튼을 가로로 정렬 */
+/* 버튼 컨테이너 - 가로 정렬 & 오른쪽 정렬 */
 .button-group {
   display: flex;
   flex-direction: row; /* 가로 정렬 */
-  gap: 10px; /* 버튼 사이 간격 */
   align-items: center;
   justify-content: flex-end; /* 오른쪽 정렬 */
-  min-width: 100px;
+  gap: 8px; /* 버튼 간 간격 추가 */
+  margin-left: auto; /* 오른쪽으로 정렬 */
 }
 
 /* 완료 버튼 */
