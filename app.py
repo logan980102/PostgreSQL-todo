@@ -3,6 +3,7 @@ import psycopg2
 from psycopg2.extras import DictCursor
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -32,30 +33,6 @@ def init_db():
                 );
             """)
             conn.commit()
-
-# ✅ 매일 6시 투두리스트 초기화 + 진행 상태 저장
-def reset_todos():
-    today = datetime.now().date()
-    yesterday = today - timedelta(days=1)
-
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            # 어제의 진행 상태 저장
-            cur.execute("""
-                INSERT INTO history (date, completed_tasks, total_tasks)
-                SELECT %s, COUNT(*) FILTER (WHERE done = TRUE), COUNT(*)
-                FROM todos
-                ON CONFLICT (date) DO NOTHING;
-            """, (yesterday,))
-            
-            # 투두리스트 초기화
-            cur.execute("DELETE FROM todos;")
-            conn.commit()
-
-# ✅ 스케줄러 실행 (매일 6시)
-scheduler = BackgroundScheduler()
-scheduler.add_job(reset_todos, "cron", hour=22, minute=10, timezone="Asia/Seoul") 
-scheduler.start()
 
 # ✅ 투두리스트 조회
 @app.route("/")
@@ -107,26 +84,22 @@ def delete_todo(todo_id):
     
     return jsonify({"id": todo_id})
 
-# ✅ 전체 삭제 (초기화 버튼)
+# 데이터베이스 초기화 함수
+def reset_todos():
+    conn = psycopg2.connect("todo.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM todos")  # 모든 데이터 삭제
+    conn.commit()
+    conn.close()
+
 @app.route("/reset", methods=["POST"])
 def reset():
-    reset_todos()
-    return jsonify({"message": "Todos reset successfully!"})
-
-# ✅ 최근 7일간 진행률 조회 API
-@app.route("/history")
-def get_history():
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute("""
-                SELECT date, completed_tasks, total_tasks
-                FROM history
-                WHERE date >= %s
-                ORDER BY date DESC;
-            """, (datetime.now().date() - timedelta(days=6),))
-            history = cur.fetchall()
-    
-    return jsonify([dict(row) for row in history])
+    try:
+        reset_todos()
+        return jsonify({"success": True})
+    except Exception as e:
+        print(f"초기화 오류: {e}")
+        return jsonify({"success": False})
 
 if __name__ == "__main__":
     init_db()  # DB 초기화 실행
