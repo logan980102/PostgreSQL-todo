@@ -96,7 +96,7 @@ li {
 li span {
   flex: 1;
   text-align: left;
-  font-size: 18px; /* 글씨 크기 증가 */
+  font-size: 16px; /* 글씨 크기 증가 */
   font-weight: normal; /* 볼드 제거 */
   color: black;
 }
