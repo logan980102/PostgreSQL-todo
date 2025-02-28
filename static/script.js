@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const addBtn = document.getElementById("add-btn");
   const taskList = document.getElementById("task-list");
   const resetBtn = document.getElementById("reset-btn");
-  const historyList = document.getElementById("history-list");
 
   function fetchTasks() {
     fetch("/todos")
@@ -19,16 +18,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const li = document.createElement("li");
     li.classList.toggle("done", done);
     li.innerHTML = `
-          <span>${text}</span>
-          <button class="toggle-btn" data-id="${id}">${
-      done ? "✅" : "✔️"
-    }</button>
-          <button class="delete-btn" data-id="${id}">🗑️</button>
-      `;
+      <span>${text}</span>
+      <button class="toggle-btn" data-id="${id}">${done ? "✅" : "✔️"}</button>
+      <button class="delete-btn" data-id="${id}">🗑️</button>
+    `;
     taskList.appendChild(li);
   }
 
-  // ✅ "추가" 버튼 클릭 또는 엔터 키 입력
   function addTaskFromInput() {
     const text = taskInput.value.trim();
     if (text === "") return;
@@ -50,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // ✅ "완료/삭제" 버튼 이벤트 (이벤트 위임 방식)
   taskList.addEventListener("click", function (event) {
     const target = event.target;
     const id = target.dataset.id;
@@ -62,11 +57,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // 🧹 "전체 삭제" 버튼
   resetBtn.addEventListener("click", function () {
-    fetch("/reset", { method: "POST" }).then(() => fetchTasks());
+    fetch("/reset", { method: "POST" })
+      .then(() => fetchTasks())
+      .catch((err) => console.error("Reset failed:", err));
   });
 
   fetchTasks();
-  fetchHistory();
+  // fetchHistory(); // 이 함수가 필요하면 구현해서 사용하세요.
 });

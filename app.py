@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 import psycopg2
 from psycopg2.extras import DictCursor
-from datetime import datetime, timedelta
-from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 
 app = Flask(__name__)
@@ -84,18 +82,14 @@ def delete_todo(todo_id):
     
     return jsonify({"id": todo_id})
 
-# 데이터베이스 초기화 함수
-def reset_todos():
-    conn = psycopg2.connect("todo.db")
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM todos")  # 모든 데이터 삭제
-    conn.commit()
-    conn.close()
-
+# ✅ 전체 초기화
 @app.route("/reset", methods=["POST"])
-def reset():
+def reset_todos():
     try:
-        reset_todos()
+        with get_db_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM todos;")  # 모든 투두 삭제
+                conn.commit()
         return jsonify({"success": True})
     except Exception as e:
         print(f"초기화 오류: {e}")
