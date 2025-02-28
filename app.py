@@ -2,9 +2,16 @@ from flask import Flask, request, jsonify, render_template
 import psycopg2
 from psycopg2.extras import DictCursor
 from datetime import datetime
+import requests
+
+
+
 
 app = Flask(__name__)
 
+
+API_KEY = "0c3ab40f7d457d50856c64cebbaa68e7"
+CITY = "Sancheok-dong, KR"
 # 📌 PostgreSQL 연결 정보 (직접 URL 사용)
 DATABASE_URL = "postgresql://todo_db_tfuv_user:5yaa9Fj4LdpKvbKZdrkTP9IPuhOiQiWm@dpg-cv0p94qj1k6c73ec6g30-a/todo_db_tfuv"
 
@@ -32,10 +39,38 @@ def init_db():
             """)
             conn.commit()
 
-# ✅ 투두리스트 조회
+# 날씨 정보를 가져오는 함수
+def get_weather():
+    api_key = "YOUR_OPENWEATHERMAP_API_KEY"  # OpenWeatherMap API 키를 입력하세요
+    city = "Sancheok-dong, KR"
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=kr"
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if response.status_code == 200:
+            weather = {
+                "description": data["weather"][0]["description"],
+                "icon": data["weather"][0]["icon"],
+                "temperature": data["main"]["temp"]
+            }
+            return weather
+        else:
+            print(f"Error fetching weather data: {data['message']}")
+            return None
+    except Exception as e:
+        print(f"Exception occurred: {e}")
+        return None
+
+
+# 투두리스트 조회
 @app.route("/")
 def index():
-    return render_template("index.html")
+    today = datetime.now().strftime("%m월 %d일 %A")
+    weather = get_weather()
+    return render_template("index.html", today=today, weather=weather)
+
+# 이하 기존 코드 생략
 
 @app.route("/todos")
 def get_todos():

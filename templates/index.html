@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>투두리스트</title>
+    <title>유진이의 투두리스트</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='styles.css') }}"
@@ -20,6 +20,26 @@
         <h1>유진이의 투두리스트</h1>
       </div>
 
+      <!-- 날짜 표시 -->
+      <p class="date">{{ today }} 입니당</p>
+
+      <!-- 날씨 표시 -->
+      {% if weather %}
+      <div class="weather">
+        <img
+          src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png"
+          alt="{{ weather.description }}"
+        />
+        <p>
+          현재 날씨는: {{ weather.description }}, 온도: {{ weather.temperature
+          }}°C
+        </p>
+      </div>
+      {% else %}
+      <p>날씨 정보를 가져올 수 없습니다.</p>
+      {% endif %}
+
+      <!-- 입력창 -->
       <div class="input-area">
         <input
           type="text"
@@ -28,9 +48,13 @@
         />
         <button id="add-btn">추가</button>
       </div>
+
+      <!-- 할 일 리스트 -->
       <ul id="task-list"></ul>
+
       <button id="reset-btn" class="reset">하루의 인생을 초기화하기</button>
     </div>
+
     <script src="{{ url_for('static', filename='script.js') }}"></script>
   </body>
 </html>

@@ -161,3 +161,22 @@ li.done {
 .reset:hover {
   background: #ff1e1e;
 }
+
+/* 날짜 스타일 */
+.date {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* 날씨 정보 스타일 */
+.weather {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.weather img {
+  width: 50px;
+}
