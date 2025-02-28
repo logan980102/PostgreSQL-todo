@@ -3,8 +3,8 @@ import psycopg2
 from psycopg2.extras import DictCursor
 from datetime import datetime
 import requests
-import locale
-
+from datetime import datetime
+import pytz
 
 
 app = Flask(__name__)
@@ -68,8 +68,9 @@ def get_weather():
 # ✅ 메인 페이지 라우트
 @app.route("/")
 def index():
-    # 📌 날짜 포맷을 "00월 00일 0요일" 형태로 변환
-    today = datetime.now().strftime("%m월 %d일") + f" {get_korean_weekday()}"
+    # 한국 시간(KST) 설정
+    kst = pytz.timezone("Asia/Seoul")
+    today = datetime.now(kst).strftime("%m월 %d일 %A 입니당")
 
     # 📌 날씨 데이터 가져오기
     weather = get_weather()
