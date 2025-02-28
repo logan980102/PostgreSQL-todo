@@ -18,17 +18,21 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!text.trim()) return;
     const li = document.createElement("li");
     li.classList.toggle("done", done);
+    if (done) {
+      li.style.backgroundColor = "#d4f8d4"; // ✅ 연초록색 적용
+    }
     li.innerHTML = `
           <span>${text}</span>
-          <button class="toggle-btn" data-id="${id}">${
+          <div class="task-buttons">
+            <button class="toggle-btn" data-id="${id}">${
       done ? "✅" : "✔️"
     }</button>
-          <button class="delete-btn" data-id="${id}">🗑️</button>
+            <button class="delete-btn" data-id="${id}">🗑️</button>
+          </div>
       `;
     taskList.appendChild(li);
   }
 
-  // ✅ "추가" 버튼 클릭 또는 엔터 키 입력
   function addTaskFromInput() {
     const text = taskInput.value.trim();
     if (text === "") return;
@@ -50,7 +54,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // ✅ "완료/삭제" 버튼 이벤트 (이벤트 위임 방식)
   taskList.addEventListener("click", function (event) {
     const target = event.target;
     const id = target.dataset.id;
@@ -62,12 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // 🧹 "전체 삭제" 버튼
   resetBtn.addEventListener("click", function () {
     fetch("/reset", { method: "POST" }).then(() => fetchTasks());
   });
 
-  // 📌 최근 7일 진행률 가져오기
   function fetchHistory() {
     fetch("/history")
       .then((res) => res.json())

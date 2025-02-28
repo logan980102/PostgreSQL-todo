@@ -2,7 +2,7 @@ body {
   font-family: "Arial", sans-serif;
   text-align: center;
   background-color: #f4f4f4;
-  cursor: url("/static/cursor.png"), auto; /* 🎨 원하는 마우스 커서 이미지 */
+  cursor: url("/static/cursor.png"), auto;
 }
 
 .container {
@@ -26,13 +26,15 @@ h2 {
 
 input {
   flex: 1;
-  padding: 10px;
+  padding: 15px; /* 🔹 크기 증가 */
   border: 1px solid #ddd;
   border-radius: 5px;
+  font-size: 16px; /* 🔹 글씨 크기 증가 */
 }
 
 button {
-  padding: 10px;
+  padding: 15px; /* 🔹 버튼 크기 증가 */
+  font-size: 16px; /* 🔹 버튼 글씨 크기 증가 */
   background: #28a745;
   color: white;
   border: none;
@@ -51,10 +53,11 @@ ul {
 
 li {
   display: flex;
+  align-items: center; /* 🔹 위아래 중앙 정렬 */
   justify-content: space-between;
   background: #fff;
   margin: 5px 0;
-  padding: 10px;
+  padding: 15px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -62,6 +65,12 @@ li {
 li.done {
   text-decoration: line-through;
   color: gray;
+  background-color: #d4f8d4 !important; /* ✅ 연초록색 배경 */
+}
+
+.task-buttons {
+  display: flex;
+  gap: 10px; /* 🔹 버튼 사이 간격 조정 */
 }
 
 #history-container {
