@@ -9,7 +9,6 @@ import locale
 
 app = Flask(__name__)
 
-locale.setlocale(locale.LC_TIME, "ko_KR.UTF-8")
 API_KEY = "0c3ab40f7d457d50856c64cebbaa68e7"
 CITY = "Sancheok-dong, KR"
 # 📌 PostgreSQL 연결 정보 (직접 URL 사용)
