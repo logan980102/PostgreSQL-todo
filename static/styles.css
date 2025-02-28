@@ -173,8 +173,10 @@ li.done {
 .weather {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  justify-content: center; /* 중앙 정렬 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  gap: 8px; /* 아이콘과 텍스트 간격 조정 */
+  margin: 10px auto; /* 중앙 배치 */
 }
 
 .weather img {
