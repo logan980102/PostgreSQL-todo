@@ -4,19 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>투두리스트</title>
-    <link rel="stylesheet" href="static/style.css" />
+    <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
-    <h1>📌 투두리스트</h1>
-    <input type="text" id="task-input" placeholder="할 일을 입력하세요" />
-    <button id="add-btn">추가</button>
-    <ul id="task-list"></ul>
-    <button id="reset-btn">전체 삭제</button>
+    <div class="container">
+      <h1>📝 오늘의 할 일</h1>
+      <div class="input-container">
+        <input
+          type="text"
+          id="task-input"
+          placeholder="할 일을 입력하세요..."
+        />
+        <button id="add-btn">추가</button>
+      </div>
+      <ul id="task-list"></ul>
+      <button id="reset-btn">전체 삭제</button>
 
-    <h2>📅 지난 7일간의 기록</h2>
-    <ul id="history-list"></ul>
-    <!-- ✅ 기록을 표시할 영역 추가 -->
-
-    <script src="static/script.js"></script>
+      <h2>📅 최근 7일 기록</h2>
+      <div id="history-container">
+        <table>
+          <thead>
+            <tr>
+              <th>날짜</th>
+              <th>완료</th>
+              <th>전체</th>
+              <th>진행률</th>
+            </tr>
+          </thead>
+          <tbody id="history-list"></tbody>
+        </table>
+      </div>
+    </div>
+    <script src="/static/script.js"></script>
   </body>
 </html>

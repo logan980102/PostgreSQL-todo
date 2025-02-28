@@ -1,148 +1,85 @@
-/* 전체 페이지 스타일 */
 body {
   font-family: "Arial", sans-serif;
-  background-color: #f4f6f8; /* 밝은 배경 */
   text-align: center;
-  margin: 0;
-  padding: 0;
+  background-color: #f4f4f4;
+  cursor: url("/static/cursor.png"), auto; /* 🎨 원하는 마우스 커서 이미지 */
 }
 
-/* 투두리스트 컨테이너 */
 .container {
-  width: 90%;
   max-width: 400px;
   margin: 50px auto;
-  background: white;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* 제목 스타일 - 더 크고 강조된 스타일 */
-h1 {
-  color: #414141;
-  font-size: 34px; /* 제목 크기 증가 */
-  margin-bottom: 20px;
-  font-weight: bold;
+h1,
+h2 {
+  color: #333;
 }
 
-/* 입력 영역 */
-.input-area {
+.input-container {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
 }
 
 input {
   flex: 1;
-  padding: 12px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
-/* 버튼 기본 스타일 */
 button {
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
+  padding: 10px;
+  background: #28a745;
   color: white;
-  font-size: 14px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-/* 추가 버튼 */
-#add-btn {
-  background-color: #007bff;
-  width: 70px;
+button:hover {
+  background: #218838;
 }
 
-#add-btn:hover {
-  background-color: #0056b3;
-}
-
-/* 리스트 스타일 */
 ul {
   list-style: none;
   padding: 0;
 }
 
-/* 개별 투두 항목 */
 li {
-  background: #fff;
-  padding: 12px;
-  border-radius: 8px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  border: 1px solid #ddd;
-  transition: background 0.3s ease-in-out;
-}
-
-/* 투두 텍스트 */
-li span {
-  flex: 1;
-  text-align: left;
-  font-size: 16px;
-  color: black;
-}
-
-/* 버튼 컨테이너 (오른쪽 정렬 & 간격 추가) */
-.button-group {
-  display: flex;
-  gap: 20px; /* 버튼 사이 간격을 20px로 설정 */
-  margin-left: auto; /* 오른쪽 정렬 */
-  margin-right: 10px; /* 오른쪽 여백 추가 */
-}
-
-/* 완료 버튼 */
-.toggle-btn {
-  background-color: #28a745;
-  width: 45px;
-  height: 40px;
+  background: #fff;
+  margin: 5px 0;
+  padding: 10px;
   border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.toggle-btn:hover {
-  background-color: #218838;
-}
-
-/* 삭제 버튼 */
-.delete-btn {
-  background-color: #dc3545;
-  width: 45px;
-  height: 40px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-}
-
-.delete-btn:hover {
-  background-color: #c82333;
-}
-
-/* 완료된 항목 스타일 */
 li.done {
   text-decoration: line-through;
   color: gray;
-  background: #e9f5e9;
 }
 
-/* 전체 삭제 버튼 */
-.reset {
-  margin-top: 15px;
-  background: #ff3c3c; /* 더 부드러운 노란색으로 변경 */
-  color: white;
-  font-weight: bold;
+#history-container {
+  margin-top: 20px;
 }
 
-.reset:hover {
-  background: #ff1e1e;
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
 }

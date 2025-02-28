@@ -1,18 +1,19 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import psycopg2
-import os
+from psycopg2.extras import DictCursor
+from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime, date, timedelta
 
 app = Flask(__name__)
 
-# 데이터베이스 연결 함수
+# 📌 PostgreSQL 연결 정보 (직접 URL 사용)
 DATABASE_URL = "postgresql://todo_db_tfuv_user:5yaa9Fj4LdpKvbKZdrkTP9IPuhOiQiWm@dpg-cv0p94qj1k6c73ec6g30-a/todo_db_tfuv"
 
+# ✅ DB 연결 함수
 def get_db_connection():
-    return psycopg2.connect(DATABASE_URL)
+    return psycopg2.connect(DATABASE_URL, cursor_factory=DictCursor)
 
-# 📌 DB 초기화
+# ✅ DB 초기화
 def init_db():
     with get_db_connection() as conn:
         with conn.cursor() as cur:
@@ -20,68 +21,43 @@ def init_db():
                 CREATE TABLE IF NOT EXISTS todos (
                     id SERIAL PRIMARY KEY,
                     text TEXT NOT NULL,
-                    done BOOLEAN NOT NULL DEFAULT FALSE
-                )
-            """)
-            cur.execute("""
+                    done BOOLEAN DEFAULT FALSE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
                 CREATE TABLE IF NOT EXISTS history (
                     id SERIAL PRIMARY KEY,
-                    date DATE NOT NULL,
-                    completed_count INTEGER NOT NULL,
-                    total_count INTEGER NOT NULL
-                )
+                    date DATE UNIQUE,
+                    completed_tasks INT DEFAULT 0,
+                    total_tasks INT DEFAULT 0
+                );
             """)
             conn.commit()
 
-init_db()
-
-# 📌 매일 6시 자동 초기화 및 기록 저장
+# ✅ 매일 6시 투두리스트 초기화 + 진행 상태 저장
 def reset_todos():
+    today = datetime.now().date()
+    yesterday = today - timedelta(days=1)
+
     with get_db_connection() as conn:
         with conn.cursor() as cur:
-            # 현재 날짜
-            today = date.today()
-
-            # 완료된 투두 개수
-            cur.execute("SELECT COUNT(*) FROM todos WHERE done = TRUE")
-            completed_count = cur.fetchone()[0]
-
-            # 전체 투두 개수
-            cur.execute("SELECT COUNT(*) FROM todos")
-            total_count = cur.fetchone()[0]
-
-            # 기록 저장
-            cur.execute(
-                "INSERT INTO history (date, completed_count, total_count) VALUES (%s, %s, %s)",
-                (today, completed_count, total_count)
-            )
-
-            # 7일 이상 지난 기록 삭제
-            seven_days_ago = today - timedelta(days=7)
-            cur.execute("DELETE FROM history WHERE date < %s", (seven_days_ago,))
-
+            # 어제의 진행 상태 저장
+            cur.execute("""
+                INSERT INTO history (date, completed_tasks, total_tasks)
+                SELECT %s, COUNT(*) FILTER (WHERE done = TRUE), COUNT(*)
+                FROM todos
+                ON CONFLICT (date) DO NOTHING;
+            """, (yesterday,))
+            
             # 투두리스트 초기화
-            cur.execute("DELETE FROM todos")
+            cur.execute("DELETE FROM todos;")
             conn.commit()
 
-# 스케줄러 실행
+# ✅ 스케줄러 실행 (매일 6시)
 scheduler = BackgroundScheduler()
-scheduler.add_job(reset_todos, 'cron', hour=6)  # 매일 오전 6시 실행
+scheduler.add_job(reset_todos, "cron", hour=6, timezone="Asia/Seoul")
 scheduler.start()
 
-# 📌 최근 7일간의 기록 가져오기
-@app.route("/history")
-def get_history():
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute("""
-                SELECT date, completed_count, total_count FROM history
-                ORDER BY date DESC LIMIT 7
-            """)
-            history = [{"date": str(row[0]), "completed": row[1], "total": row[2]} for row in cur.fetchall()]
-    return jsonify(history)
-
-# 📌 기존 API 유지
+# ✅ 투두리스트 조회
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -90,41 +66,68 @@ def index():
 def get_todos():
     with get_db_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT id, text, done FROM todos")
-            todos = [{"id": row[0], "text": row[1], "done": row[2]} for row in cur.fetchall()]
-    return jsonify(todos)
+            cur.execute("SELECT id, text, done FROM todos ORDER BY id;")
+            todos = cur.fetchall()
+    return jsonify([dict(todo) for todo in todos])
 
+# ✅ 투두 추가
 @app.route("/add", methods=["POST"])
 def add_todo():
     data = request.json
     text = data.get("text", "").strip()
-    if text:
-        with get_db_connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute("INSERT INTO todos (text, done) VALUES (%s, %s)", (text, False))
-                conn.commit()
-    return "", 204
+    if not text:
+        return jsonify({"error": "Empty task"}), 400
 
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("INSERT INTO todos (text) VALUES (%s) RETURNING id;", (text,))
+            todo_id = cur.fetchone()[0]
+            conn.commit()
+    
+    return jsonify({"id": todo_id, "text": text, "done": False})
+
+# ✅ 완료 상태 토글
 @app.route("/toggle/<int:todo_id>", methods=["POST"])
 def toggle_todo(todo_id):
     with get_db_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("UPDATE todos SET done = NOT done WHERE id = %s", (todo_id,))
+            cur.execute("UPDATE todos SET done = NOT done WHERE id = %s RETURNING done;", (todo_id,))
+            updated_done = cur.fetchone()[0]
             conn.commit()
-    return "", 204
+    
+    return jsonify({"id": todo_id, "done": updated_done})
 
+# ✅ 개별 삭제
 @app.route("/delete/<int:todo_id>", methods=["POST"])
 def delete_todo(todo_id):
     with get_db_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("DELETE FROM todos WHERE id = %s", (todo_id,))
+            cur.execute("DELETE FROM todos WHERE id = %s;", (todo_id,))
             conn.commit()
-    return "", 204
+    
+    return jsonify({"id": todo_id})
 
+# ✅ 전체 삭제 (초기화 버튼)
 @app.route("/reset", methods=["POST"])
-def reset_todos_manual():
+def reset():
     reset_todos()
-    return "", 204
+    return jsonify({"message": "Todos reset successfully!"})
+
+# ✅ 최근 7일간 진행률 조회 API
+@app.route("/history")
+def get_history():
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT date, completed_tasks, total_tasks
+                FROM history
+                WHERE date >= %s
+                ORDER BY date DESC;
+            """, (datetime.now().date() - timedelta(days=6),))
+            history = cur.fetchall()
+    
+    return jsonify([dict(row) for row in history])
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    init_db()  # DB 초기화 실행
+    app.run(host="0.0.0.0", port=5000, debug=True)
