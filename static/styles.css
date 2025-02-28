@@ -1,7 +1,7 @@
 /* 전체 페이지 스타일 */
 body {
   font-family: "Arial", sans-serif;
-  background-color: #f4f6f8; /* 밝은 배경 */
+  background-color: #f4f6f8;
   text-align: center;
   margin: 0;
   padding: 0;
@@ -18,10 +18,10 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* 제목 스타일 - 더 크고 강조된 스타일 */
+/* 제목 스타일 */
 h1 {
   color: #414141;
-  font-size: 34px; /* 제목 크기 증가 */
+  font-size: 34px;
   margin-bottom: 20px;
   font-weight: bold;
 }
@@ -35,7 +35,7 @@ h1 {
 
 input {
   flex: 1;
-  padding: 10px; /* 위아래 패딩 감소 */
+  padding: 10px;
   border: 2px solid #ddd;
   border-radius: 8px;
   font-size: 16px;
@@ -70,7 +70,7 @@ ul {
 /* 개별 투두 항목 */
 li {
   background: #fff;
-  padding: 6px 12px; /* 위아래 패딩 줄이기 */
+  padding: 6px 10px; /* 높이 조절 */
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
@@ -78,36 +78,36 @@ li {
   margin-bottom: 5px;
   border: 1px solid #ddd;
   transition: background 0.3s ease-in-out;
-  min-height: 30px; /* 최소 높이 조정 */
+  min-height: 1.3em; /* 입력 칸보다 1.3배 크도록 설정 */
 }
 
 /* 투두 텍스트 */
 li span {
   flex: 1;
   text-align: left;
-  font-size: 18px; /* 글씨 크기 증가 */
-  font-weight: bold;
+  font-size: 16px; /* 크기는 유지 */
+  font-weight: normal; /* 볼드 제거 */
   color: black;
 }
 
-/* 버튼 컨테이너 (오른쪽 정렬 & 간격 추가) */
+/* 버튼 컨테이너 */
 .button-group {
   display: flex;
-  gap: 15px; /* 버튼 간격 줄이기 */
-  margin-left: auto; /* 오른쪽 정렬 */
-  margin-right: 5px; /* 오른쪽 여백 추가 */
+  gap: 10px;
+  margin-left: auto;
+  margin-right: 5px;
 }
 
 /* 완료 버튼 */
 .toggle-btn {
   background-color: #28a745;
-  width: 40px;
-  height: 35px;
+  width: 35px;
+  height: 30px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .toggle-btn:hover {
@@ -117,13 +117,13 @@ li span {
 /* 삭제 버튼 */
 .delete-btn {
   background-color: #dc3545;
-  width: 40px;
-  height: 35px;
+  width: 35px;
+  height: 30px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .delete-btn:hover {
@@ -140,7 +140,7 @@ li.done {
 /* 전체 삭제 버튼 */
 .reset {
   margin-top: 10px;
-  background: #ff3c3c; /* 더 부드러운 노란색으로 변경 */
+  background: #ff3c3c;
   color: white;
   font-weight: bold;
 }
