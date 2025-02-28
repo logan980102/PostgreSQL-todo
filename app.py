@@ -69,7 +69,7 @@ def get_weather():
 def index():
     # 한국 시간(KST) 설정
     kst = pytz.timezone("Asia/Seoul")
-    today = datetime.now(kst).strftime("%m월 %d일 %A 입니당")
+    today = datetime.now(kst).strftime("%m월 %d일 %A")
 
     # 📌 날씨 데이터 가져오기
     weather = get_weather()
