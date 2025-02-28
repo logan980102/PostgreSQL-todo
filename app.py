@@ -39,7 +39,12 @@ def init_db():
             """)
             conn.commit()
 
-# 날씨 정보를 가져오는 함수
+# ✅ 한글 요일 변환 함수
+def get_korean_weekday():
+    weekdays = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"]
+    return weekdays[datetime.now().weekday()]  # 0(월) ~ 6(일) 매핑
+
+# ✅ 날씨 데이터 가져오기
 def get_weather():
     city = "Hwaseong-si"
     country = "KR"
@@ -60,6 +65,17 @@ def get_weather():
     except Exception as e:
         print(f"Error fetching weather data: {e}")
         return None
+
+# ✅ 메인 페이지 라우트
+@app.route("/")
+def index():
+    # 📌 날짜 포맷을 "00월 00일 0요일" 형태로 변환
+    today = datetime.now().strftime("%m월 %d일") + f" {get_korean_weekday()}"
+
+    # 📌 날씨 데이터 가져오기
+    weather = get_weather()
+
+    return render_template("index.html", today=today, weather=weather)
 
 
 
