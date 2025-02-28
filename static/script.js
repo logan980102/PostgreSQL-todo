@@ -67,31 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("/reset", { method: "POST" }).then(() => fetchTasks());
   });
 
-  // 📌 최근 7일 진행률 가져오기
-  function fetchHistory() {
-    fetch("/history")
-      .then((res) => res.json())
-      .then((data) => {
-        historyList.innerHTML = "";
-        data.forEach((record) => {
-          const tr = document.createElement("tr");
-          const progress =
-            record.total_tasks > 0
-              ? `${Math.round(
-                  (record.completed_tasks / record.total_tasks) * 100
-                )}%`
-              : "0%";
-          tr.innerHTML = `
-                      <td>${record.date}</td>
-                      <td>${record.completed_tasks}</td>
-                      <td>${record.total_tasks}</td>
-                      <td>${progress}</td>
-                  `;
-          historyList.appendChild(tr);
-        });
-      });
-  }
-
   fetchTasks();
   fetchHistory();
 });
